@@ -26,8 +26,14 @@ const topk = function(arr, k) {
 }
 
 const sensor_port = 5000;
-const sensors = [process.env.SENSOR_ADDRESS_1, process.env.SENSOR_ADDRESS_2,
-                process.env.SENSOR_ADDRESS_3, process.env.SENSOR_ADDRESS_4]
+const sensors = [];
+
+let idx = 1;
+
+while (process.env[`SENSOR_ADDRESS_${idx}`] != null) {
+    sensors.push(process.env[`SENSOR_ADDRESS_${idx}`]);
+    idx++;
+}
 
 app.use(bodyParser.json());
 
@@ -37,8 +43,6 @@ app.get('/temps', function (req, res) {
         if (sensor == null) return cb(null);
         request('http://'+sensor+':'+sensor_port+'/temps', (err, res, body) => {
             if (err) return cb(err);
-            logger.info(JSON.parse(body));
-            logger.info(JSON.parse(body)['temps']);
             tmp = tmp.concat(JSON.parse(body)['temps']);
             cb(null);
         });
@@ -48,8 +52,7 @@ app.get('/temps', function (req, res) {
             return res.send(500);
         }
 
-        logger.info(tmp);
-        res.send(200, { temps: topk(tmp, 2) });
+        res.send(200, { temps: topk(tmp, 10) });
     });
 
 })

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const log4js = require('log4js')
 const request = require('request')
 const async = require('async')
+const moment = require('moment')
 const app = express()
 
 log4js.configure({
@@ -26,19 +27,38 @@ const topk = function(arr, k) {
 }
 
 const fog_port = 4000;
-const fogs = [process.env.FOG_ADDRESS_1, process.env.FOG_ADDRESS_2]
+const fogs = [];
+
+let idx = 1;
+
+while (process.env[`FOG_ADDRESS_${idx}`] != null) {
+    fogs.push(process.env[`FOG_ADDRESS_${idx}`]);
+    idx++;
+}
+
+const sensor_port = 5000;
+const sensors = [];
+
+idx = 1;
+
+while (process.env[`SENSOR_ADDRESS_${idx}`] != null) {
+    sensors.push(process.env[`SENSOR_ADDRESS_${idx}`]);
+    idx++;
+}
 
 app.use(bodyParser.json());
 
-app.get('/temps', function (req, res) {
+app.get('/tempsSensor', function (req, res) {
     let tmp = [];
     
-    async.each(fogs, function(fog, cb) {
-        if (fog == null) return cb(null);
-        request('http://'+fog+':'+fog_port+'/temps', (err, res, body) => {
+    const start = moment();
+    async.each(sensors, function(sensor, cb) {
+        if (sensor == null) return cb(null);
+        request('http://'+sensor+':'+sensor_port+'/temps', (err, res, body) => {
             if (err) return cb(err);
-            logger.info(JSON.parse(body));
-            tmp = tmp.concat(JSON.parse(body)['temps']);
+            const temps = JSON.parse(body)['temps'];
+            logger.info(`SENSOR: ${fog} TEMPS: ${temps.length} `);
+            tmp = tmp.concat(temps);
             cb(null);
         });
     }, function(err) {
@@ -48,7 +68,40 @@ app.get('/temps', function (req, res) {
         }
 
         logger.info(tmp);
-        return res.send(200, { temps: topk(tmp, 2)});
+        const resTemps = { temps: topk(tmp, 10)};
+        const end = moment();
+        const diff = end.diff(start);
+        logger.info(`START: ${start} END: ${end} DIFF: ${diff}`);
+        return res.send(200, resTemps);
+    });
+})
+
+
+app.get('/temps', function (req, res) {
+    let tmp = [];
+    
+    const start = moment();
+    async.each(fogs, function(fog, cb) {
+        if (fog == null) return cb(null);
+        request('http://'+fog+':'+fog_port+'/temps', (err, res, body) => {
+            if (err) return cb(err);
+            const temps = JSON.parse(body)['temps'];
+            logger.info(`FOG: ${fog} TEMPS: ${temps.length} `);
+            tmp = tmp.concat(temps);
+            cb(null);
+        });
+    }, function(err) {
+        if (err) {
+            logger.error(err);
+            return res.send(500);
+        }
+
+        logger.info(tmp);
+        const resTemps = { temps: topk(tmp, 10)};
+        const end = moment();
+        const diff = end.diff(start);
+        logger.info(`START: ${start} END: ${end} DIFF: ${diff}`);
+        return res.send(200, resTemps);
     });
 })
 

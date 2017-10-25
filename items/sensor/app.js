@@ -13,7 +13,7 @@ const logger = log4js.getLogger('log');
 
 app.use(bodyParser.json());
 
-const samples = process.env.TEMP_SAMPLES;
+const samples = process.env.TEMP_SAMPLES || 500000;
 
 const randVal = function(max, min) {
     return Math.floor(Math.random()*(max-min+1)+min);
