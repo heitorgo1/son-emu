@@ -63,11 +63,14 @@ def create_topology1():
 
     fi1 = net.addDatacenter("fog_instance_1")
     fi2 = net.addDatacenter("fog_instance_2")
+    fi3 = net.addDatacenter("fog_instance_3")
 
     ii1 = net.addDatacenter("iot_instance_1")
     ii2 = net.addDatacenter("iot_instance_2")
     ii3 = net.addDatacenter("iot_instance_3")
     ii4 = net.addDatacenter("iot_instance_4")
+    ii5 = net.addDatacenter("iot_instance_5")
+    ii6 = net.addDatacenter("iot_instance_6")
 
     """
     3. You can add additional SDN switches for data center
@@ -94,8 +97,11 @@ def create_topology1():
     net.addLink(ii2, fi1, delay="10ms")
     net.addLink(ii3, fi2, delay="10ms")
     net.addLink(ii4, fi2, delay="10ms")
+    net.addLink(ii5, fi3, delay="10ms")
+    net.addLink(ii6, fi3, delay="10ms")
     net.addLink(fi1, ci, delay="100ms")
     net.addLink(fi2, ci, delay="100ms")
+    net.addLink(fi3, ci, delay="100ms")
 
     """
     5. We want to access and control our data centers from the outside,
@@ -113,10 +119,13 @@ def create_topology1():
     rapi1.connectDatacenter(ci)
     rapi1.connectDatacenter(fi1)
     rapi1.connectDatacenter(fi2)
+    rapi1.connectDatacenter(fi3)
     rapi1.connectDatacenter(ii1)
     rapi1.connectDatacenter(ii2)
     rapi1.connectDatacenter(ii3)
     rapi1.connectDatacenter(ii4)
+    rapi1.connectDatacenter(ii5)
+    rapi1.connectDatacenter(ii6)
     # run API endpoint server (in another thread, don't block)
 
     rapi1.start()
