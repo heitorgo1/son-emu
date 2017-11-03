@@ -10,7 +10,7 @@ COPY package.json .
 
 RUN npm install
 
-COPY . .
+COPY app.js .
 
 EXPOSE 4000
 

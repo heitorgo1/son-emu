@@ -21,7 +21,7 @@ son-emu-cli compute start -d fog_instance_2 -n fog2 --image fog_img # 10.0.0.20
 
 son-emu-cli compute start -d cloud_instance -n cloud --image cloud_img # 10.0.0.22
 
-docker exec -d mn.cloud /bin/bash -c "export FOG_ADDRESS_1=10.0.0.18 && export FOG_ADDRESS_2=10.0.0.20 && npm start"
+docker exec -d mn.cloud /bin/bash -c "export SENSOR_ADDRESS_5=10.0.0.10 && export SENSOR_ADDRESS_6=10.0.0.12 && export SENSOR_ADDRESS_7=10.0.0.14 && export SENSOR_ADDRESS_8=10.0.0.16 && export SENSOR_ADDRESS_1=10.0.0.2 && export SENSOR_ADDRESS_2=10.0.0.4 && export SENSOR_ADDRESS_3=10.0.0.6 && export SENSOR_ADDRESS_4=10.0.0.8 && export FOG_ADDRESS_1=10.0.0.18 && export FOG_ADDRESS_2=10.0.0.20 && npm start"
 docker exec -d mn.fog1 /bin/bash -c "export SENSOR_ADDRESS_1=10.0.0.2 && export SENSOR_ADDRESS_2=10.0.0.4 && export SENSOR_ADDRESS_3=10.0.0.6 && export SENSOR_ADDRESS_4=10.0.0.8 && npm start"
 docker exec -d mn.fog2 /bin/bash -c "export SENSOR_ADDRESS_1=10.0.0.10 && export SENSOR_ADDRESS_2=10.0.0.12 && export SENSOR_ADDRESS_3=10.0.0.14 && export SENSOR_ADDRESS_4=10.0.0.16 && npm start"
 docker exec -d mn.sensor1 npm start

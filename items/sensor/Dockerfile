@@ -10,10 +10,8 @@ COPY package.json .
 
 RUN npm install
 
-COPY . .
+COPY app.js .
 
 EXPOSE 5000
-
-ENV TEMP_SAMPLES=20
 
 CMD ["npm", "start"]
