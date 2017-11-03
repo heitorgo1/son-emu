@@ -69,7 +69,6 @@ app.get('/tempsSensor', function (req, res) {
             return res.send(500);
         }
 
-        logger.info(tmp);
         const resTemps = { temps: topk(tmp, 10)};
         const end = moment();
         const diff = end.diff(start);
@@ -98,7 +97,6 @@ app.get('/temps', function (req, res) {
             return res.send(500);
         }
 
-        logger.info(tmp);
         const resTemps = { temps: topk(tmp, 10)};
         const end = moment();
         const diff = end.diff(start);
