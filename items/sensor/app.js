@@ -27,8 +27,7 @@ app.get('/temps', function (req, res) {
         tmp.push(randVal(100, 35));
     }
 
-    
-    logger.info(tmp);
+    logger.info(`${tmp.length} TEMPS`); 
     res.send(200, { temps: tmp })
 })
 

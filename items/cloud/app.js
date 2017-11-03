@@ -32,6 +32,7 @@ const fogs = [];
 let idx = 1;
 
 while (process.env[`FOG_ADDRESS_${idx}`] != null) {
+    logger.info(`FOG_ADDRESS_${idx}: ` + process.env[`FOG_ADDRESS_${idx}`]);
     fogs.push(process.env[`FOG_ADDRESS_${idx}`]);
     idx++;
 }
@@ -42,6 +43,7 @@ const sensors = [];
 idx = 1;
 
 while (process.env[`SENSOR_ADDRESS_${idx}`] != null) {
+    logger.info(`SENSOR_ADDRESS_${idx}: ` + process.env[`SENSOR_ADDRESS_${idx}`]);
     sensors.push(process.env[`SENSOR_ADDRESS_${idx}`]);
     idx++;
 }
@@ -57,7 +59,7 @@ app.get('/tempsSensor', function (req, res) {
         request('http://'+sensor+':'+sensor_port+'/temps', (err, res, body) => {
             if (err) return cb(err);
             const temps = JSON.parse(body)['temps'];
-            logger.info(`SENSOR: ${fog} TEMPS: ${temps.length} `);
+            logger.info(`SENSOR: ${sensor} TEMPS: ${temps.length} `);
             tmp = tmp.concat(temps);
             cb(null);
         });
